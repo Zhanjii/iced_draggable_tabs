@@ -4,6 +4,8 @@ A draggable, reorderable tab bar widget for [Iced](https://iced.rs).
 
 Provides Chrome-style drag-and-drop tab reordering with visual feedback: a ghost tab follows the cursor, the source tab dims as a placeholder, and tabs reorder live as the cursor crosses midpoints.
 
+![Demo](assets/demo.gif)
+
 ## Features
 
 - Drag-and-drop tab reordering with configurable threshold
