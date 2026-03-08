@@ -1,0 +1,21 @@
+[package]
+name = "iced_draggable_tabs"
+version = "0.1.0"
+edition = "2021"
+description = "A draggable, reorderable tab bar widget for Iced"
+license = "MIT"
+repository = "https://github.com/zhanjii/iced_draggable_tabs"
+keywords = ["iced", "tabs", "drag-drop", "reorder", "widget"]
+categories = ["gui"]
+readme = "README.md"
+exclude = ["scripts/"]
+
+[dependencies]
+iced = { version = "0.14", features = ["advanced"] }
+
+[dev-dependencies]
+iced = { version = "0.14", features = ["advanced"] }
+
+[[example]]
+name = "basic"
+path = "examples/basic.rs"
