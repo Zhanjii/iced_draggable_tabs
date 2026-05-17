@@ -129,6 +129,11 @@ pub struct DraggableTabs<'a, Message> {
     on_close: Option<Box<dyn Fn(usize) -> Message + 'a>>,
     style: TabStyle,
     width: Length,
+    /// When true, every tab gets an equal share of the bar's width
+    /// (`available_width / n_tabs`) instead of being sized to its text
+    /// content. Use this for primary nav bars where tabs should "fill"
+    /// the chrome strip, like CTk's CTkTabview with uniform grid.
+    equal_widths: bool,
 }
 
 impl<'a, Message> DraggableTabs<'a, Message> {
@@ -152,7 +157,17 @@ impl<'a, Message> DraggableTabs<'a, Message> {
             on_close: None,
             style: TabStyle::default(),
             width: Length::Fill,
+            equal_widths: false,
         }
+    }
+
+    /// Force every tab to receive an equal share of the bar's width.
+    /// Defaults to `false` (tabs size to their text content). Set to
+    /// `true` for primary navigation bars where tabs should distribute
+    /// evenly across the full bar — drag-to-reorder still works.
+    pub fn equal_widths(mut self, equal: bool) -> Self {
+        self.equal_widths = equal;
+        self
     }
 
     /// Set the tab bar width.
@@ -306,13 +321,27 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
         }
 
         let total_spacing = self.style.spacing * (n as f32 - 1.0).max(0.0);
-        let natural_width: f32 = state.tab_widths.iter().sum::<f32>() + total_spacing;
 
-        // If tabs exceed available width, scale them down proportionally
-        if natural_width > max_width && natural_width > 0.0 {
-            let scale = (max_width - total_spacing) / (natural_width - total_spacing);
+        // `equal_widths` overrides the content-sized layout: every tab
+        // gets `(max_width - total_spacing) / n` regardless of its text
+        // length. Used for full-width primary-nav bars where the tabs
+        // should distribute evenly across the chrome strip. The natural
+        // text-measurement above is still done because some renderers
+        // need the paragraph cache populated for shaping.
+        if self.equal_widths && max_width.is_finite() && n > 0 {
+            let per_tab = ((max_width - total_spacing) / n as f32).max(40.0);
             for w in state.tab_widths.iter_mut() {
-                *w = (*w * scale).max(40.0);
+                *w = per_tab;
+            }
+        } else {
+            // Fallback: scale tabs down proportionally if natural widths
+            // exceed the bar. Preserves content-relative tab sizes.
+            let natural_width: f32 = state.tab_widths.iter().sum::<f32>() + total_spacing;
+            if natural_width > max_width && natural_width > 0.0 {
+                let scale = (max_width - total_spacing) / (natural_width - total_spacing);
+                for w in state.tab_widths.iter_mut() {
+                    *w = (*w * scale).max(40.0);
+                }
             }
         }
 

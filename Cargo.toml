@@ -1,6 +1,6 @@
 [package]
 name = "iced_draggable_tabs"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A draggable, reorderable tab bar widget for Iced"
 license = "MIT"
