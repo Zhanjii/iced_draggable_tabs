@@ -48,13 +48,7 @@ fn boot() -> (App, Task<Message>) {
         App {
             active_tab: 0,
             tab_order: vec![],
-            tabs: vec![
-                "Dashboard",
-                "Projects",
-                "Settings",
-                "Profile",
-                "Help",
-            ],
+            tabs: vec!["Dashboard", "Projects", "Settings", "Profile", "Help"],
             is_dark: true,
         },
         Task::none(),

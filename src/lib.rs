@@ -26,8 +26,7 @@ use iced::advanced::widget::{self, Tree, Widget};
 use iced::advanced::{Clipboard, Shell};
 use iced::mouse;
 use iced::{
-    Background, Border, Color, Element, Event, Length, Padding, Point,
-    Rectangle, Size, Theme,
+    Background, Border, Color, Element, Event, Length, Padding, Point, Rectangle, Size, Theme,
 };
 
 /// Configuration for the tab bar appearance.
@@ -262,9 +261,7 @@ impl<'a, Message> DraggableTabs<'a, Message> {
     }
 }
 
-impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
-    for DraggableTabs<'a, Message>
-{
+impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer> for DraggableTabs<'a, Message> {
     fn tag(&self) -> widget::tree::Tag {
         widget::tree::Tag::of::<DragState>()
     }
@@ -439,9 +436,7 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
                         state.widget_screen_y = raw_position.y - rel.y;
                     }
 
-                    if let (Some(drag_idx), Some(start)) =
-                        (state.dragging, state.press_start)
-                    {
+                    if let (Some(drag_idx), Some(start)) = (state.dragging, state.press_start) {
                         if !state.is_active_drag {
                             // Check threshold
                             let dx = (position.x - start.x).abs();
@@ -556,10 +551,7 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
             .style
             .active_text_color
             .unwrap_or_else(|| auto_contrast(active_bg));
-        let inactive_text = self
-            .style
-            .inactive_text_color
-            .unwrap_or(palette.text);
+        let inactive_text = self.style.inactive_text_color.unwrap_or(palette.text);
 
         // Draw each tab using per-tab widths
         let mut x = bounds.x;
@@ -578,8 +570,7 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
             x += tab_width + self.style.spacing;
 
             let is_active = original_idx == self.active;
-            let is_being_dragged =
-                state.is_active_drag && state.dragging == Some(display_idx);
+            let is_being_dragged = state.is_active_drag && state.dragging == Some(display_idx);
 
             // Tab background
             let bg_color = if is_active { active_bg } else { inactive_bg };
@@ -591,7 +582,10 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
                     renderer::Quad {
                         bounds: tab_rect,
                         border: Border {
-                            color: Color { a: 0.4, ..active_bg },
+                            color: Color {
+                                a: 0.4,
+                                ..active_bg
+                            },
                             width: 2.0,
                             ..self.style.border
                         },
@@ -617,14 +611,14 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
             }
 
             // Tab label
-            let text_color = if is_active { active_text } else { inactive_text };
+            let text_color = if is_active {
+                active_text
+            } else {
+                inactive_text
+            };
             let label = self.labels[original_idx];
 
-            let text_alpha = if is_being_dragged {
-                0.2
-            } else {
-                1.0
-            };
+            let text_alpha = if is_being_dragged { 0.2 } else { 1.0 };
 
             // Close button takes 20px from the right if enabled
             let text_max_width = if self.style.closeable {
@@ -696,7 +690,6 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
                 );
             }
         }
-
     }
 
     fn overlay<'b>(
@@ -759,9 +752,7 @@ impl<'a, Message: Clone> Widget<Message, Theme, iced::Renderer>
 }
 
 /// Convert a `DraggableTabs` into an `Element`.
-impl<'a, Message: Clone + 'a> From<DraggableTabs<'a, Message>>
-    for Element<'a, Message>
-{
+impl<'a, Message: Clone + 'a> From<DraggableTabs<'a, Message>> for Element<'a, Message> {
     fn from(tabs: DraggableTabs<'a, Message>) -> Self {
         Self::new(tabs)
     }
@@ -802,7 +793,11 @@ impl<Message> overlay::Overlay<Message, Theme, iced::Renderer> for GhostOverlay<
             .style
             .inactive_background
             .unwrap_or(extended.background.strong.color);
-        let bg_color = if self.is_active { active_bg } else { inactive_bg };
+        let bg_color = if self.is_active {
+            active_bg
+        } else {
+            inactive_bg
+        };
         let text_color = if self.is_active {
             self.style
                 .active_text_color
@@ -867,7 +862,6 @@ impl<Message> overlay::Overlay<Message, Theme, iced::Renderer> for GhostOverlay<
             text_bounds,
         );
     }
-
 }
 
 /// Auto-contrast: returns black or white depending on background luminance.
